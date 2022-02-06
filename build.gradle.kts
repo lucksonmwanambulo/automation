@@ -20,6 +20,7 @@ tasks.withType<KotlinCompile> {
 
 dependencies{
     implementation("org.seleniumhq.selenium:selenium-java:4.1.2")
+
 }
 
 application {

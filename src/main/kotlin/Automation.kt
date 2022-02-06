@@ -1,15 +1,15 @@
-import models.CoverType
-import models.Product
+import models.*
 import org.openqa.selenium.By
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.edge.EdgeDriver
-import org.openqa.selenium.interactions.Actions
+import services.ProductService
+import services.RiskCategoryService
 
 import java.time.Duration
 
 class Automation {
+
 
     private var driver: WebDriver = EdgeDriver().apply {
         this["https://iaz.hobbiton.tech/#/dashboard"]
@@ -27,6 +27,8 @@ class Automation {
         driver.findElement(By.id("password")).click()
         driver.findElement(By.id("password")).sendKeys("123456")
         driver.findElement(By.cssSelector(".btn")).click()
+        Thread.sleep(10000)
+        driver.findElement(By.xpath("//li[4]/a/span")).click()
     }
 
 
@@ -34,162 +36,25 @@ class Automation {
         driver.quit()
     }
 
-    fun addThirdPartyProduct(product: Product, index: Int) {
-
-        driver.findElement(By.xpath("//li[4]/a/span")).click()
-
-        driver.findElement(By.xpath("//tr[$index]/td")).click()
-        driver.findElement(By.linkText("Products")).click()
-        driver.findElement(By.xpath("//div/a/i")).click()
-        driver.findElement(By.id("iazCode")).click()
-        run {
-            val dropdown = driver.findElement(By.id("iazCode"))
-            dropdown.findElement(By.xpath("//option[. = '${product.coverType.code}']")).click()
-        }
-        driver.findElement(By.id("name")).click()
-        run {
-            val dropdown = driver.findElement(By.id("name"))
-            dropdown.findElement(By.xpath("//option[. = '${product.coverType.coverName}']")).click()
-        }
-        driver.findElement(By.id("code")).click()
-        driver.findElement(By.id("code")).sendKeys(product.code)
-        driver.findElement(By.id("description")).click()
-        driver.findElement(By.id("description")).sendKeys(product.coverType.coverName)
-        driver.findElement(By.id("premiumName")).click()
-        driver.findElement(By.id("premiumName")).sendKeys(product.premiumRate.toString())
-        driver.findElement(By.id("levy")).click()
-        driver.findElement(By.id("levy")).sendKeys(product.levy.toString())
-        driver.findElement(By.id("minimumLimit")).click()
-        driver.findElement(By.id("minimumLimit")).sendKeys(product.maximumRate.toString())
-        driver.findElement(By.id("maximumLimit")).click()
-        driver.findElement(By.id("maximumLimit")).sendKeys(product.maximumRate.toString())
-        driver.findElement(By.id("policyNumber")).click()
-        driver.findElement(By.id("policyNumber")).sendKeys(product.policyPrefix)
-        driver.findElement(By.id("claimNumber")).click()
-        driver.findElement(By.id("claimNumber")).sendKeys(product.claimsPrefix)
-        driver.findElement(By.xpath("//form/button")).click()
-
-        driver.findElement(By.id("wordingsFile")).sendKeys(product.wordingsPath)
-        driver.findElement(By.id("wordingsDescription")).sendKeys("Policy wording")
-        driver.findElement(By.xpath("//form/div[2]/button")).click()
-
-        driver.findElement(By.id("clausesFile")).sendKeys(product.clausesPath)
-
-        driver.findElement(By.id("clausesDescription")).sendKeys("Policy clauses")
-        driver.findElement(By.xpath("//div[3]/div/div/div/form/div[2]/button")).click()
-        addThirdPartyLiabilities(product)
-        if (product.coverType == CoverType.COMPREHENSIVE || product.coverType == CoverType.THIRD_PARTY_FIRE_AND_THEFT) {
-            addOwnDamage(driver)
-        }
-
+    fun addThirdPartyProduct(
+        product: Product, i: Int,
+    ) {
+        val productService = ProductService(driver)
+        productService.addProduct(product, i)
     }
 
-    private fun addThirdPartyLiabilities(product: Product) {
-        if (product.coverType != CoverType.ACT_ONLY) {
-            selectLimitsOfLiabilityPeril()
-            driver.findElement(By.id("perilsName")).click()
-            run {
-                val dropdown = driver.findElement(By.id("perilsName"))
-                dropdown.findElement(By.xpath("//option[. = 'Third Party Property Damage or Loss - ZMW 30,000']"))
-                    .click()
-            }
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Damage")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-        }
-        selectLimitsOfLiabilityPeril()
-        run {
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Third Party Injury/Death - ZMW 50,100']")).click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Death")
-            driver.findElement(By.xpath("//div[4]/button")).click()
-        }
-        selectLimitsOfLiabilityPeril()
-        run {
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Third Party Bodily Injury/Death Per Event - ZMW 100,100']"))
-                .click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Event")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-            driver.findElement(By.xpath("//button[2]")).click()
-        }
+    fun addRisk(
+        addRisk: AddRisk, isSingle: Boolean = true,
+
+        ) {
+        val riskCategoryService = RiskCategoryService(driver)
+        riskCategoryService.addRiskCategory(addRisk)
     }
 
-    private fun selectLimitsOfLiabilityPeril() {
-        driver.findElement(By.id("perilsType")).click()
-        val dropdown = driver.findElement(By.id("perilsType"))
-        dropdown.findElement(By.xpath("//option[. = 'Third Party Liability']")).click()
+    fun addRisks() {
+        val riskCategoryService = RiskCategoryService(driver)
+        riskCategoryService.addRisks(riskData, 5, RiskCategoryType.PRIVATE_CAR)
     }
 
-
-    private fun addOwnDamage(driver: WebDriver) {
-
-
-        run {
-            selectOwnDamagePeril(driver)
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Own Damage']")).click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Own damage")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-        }
-
-
-        run {
-            selectOwnDamagePeril(driver)
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Accidental Damage or Collision']")).click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Accidental Damage or Collision")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-        }
-
-
-        run {
-            selectOwnDamagePeril(driver)
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Fire']")).click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Fire")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-        }
-
-
-        run {
-            selectOwnDamagePeril(driver)
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Theft of Vehicle or Accessories']")).click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Theft of Vehicle or Accessories")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-        }
-
-
-
-        run {
-            selectOwnDamagePeril(driver)
-            driver.findElement(By.id("perilsName")).click()
-            val dropdown = driver.findElement(By.id("perilsName"))
-            dropdown.findElement(By.xpath("//option[. = 'Property Damage']")).click()
-            driver.findElement(By.id("perilsDescription")).click()
-            driver.findElement(By.id("perilsDescription")).sendKeys("Property Damage")
-            driver.findElement(By.cssSelector(".btn-brand-02:nth-child(1)")).click()
-        }
-
-    }
-
-    private fun selectOwnDamagePeril(driver: WebDriver) {
-        driver.findElement(By.id("perilsType")).click()
-        val dropdown = driver.findElement(By.id("perilsType"))
-        dropdown.findElement(By.xpath("//option[. = 'Own Damage']")).click()
-    }
 
 }
