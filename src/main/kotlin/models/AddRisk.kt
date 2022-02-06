@@ -1,16 +1,130 @@
 package models
 
+import kotlin.random.Random
+
 data class AddRisk(
-    val amount: Double,
-    val insuranceCompanyIndex: Int,
+    val amount: Int,
     val quarterIndex: Int,
     val riskCategoryType: RiskCategoryType,
     val coverType: CoverType,
 )
 
-val riskData = listOf(
-    AddRisk(140.0, 8, 1, RiskCategoryType.PRIVATE_CAR, CoverType.THIRD_PARTY),
-    AddRisk(180.0, 8, 2, RiskCategoryType.PRIVATE_CAR, CoverType.THIRD_PARTY),
-    AddRisk(300.0, 8, 3, RiskCategoryType.PRIVATE_CAR, CoverType.THIRD_PARTY),
-    AddRisk(400.0, 8, 4, RiskCategoryType.PRIVATE_CAR, CoverType.THIRD_PARTY),
-    )
+val thirdPartyRiskData = listOf(
+    AddRisk(
+        Random.nextInt(
+            120, 190),
+        1,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY,
+    ),
+    AddRisk(
+        Random.nextInt(190, 260),
+        2,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY,
+    ),
+    AddRisk(
+        Random.nextInt(260, 450),
+        3,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY,
+    ),
+    AddRisk(
+        Random.nextInt(460, 500),
+        4,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY,
+    ),
+)
+val actOnlyRiskData = listOf(
+    AddRisk(
+        Random.nextInt(
+            120, 190),
+        1,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.ACT_ONLY,
+    ),
+    AddRisk(
+        Random.nextInt(190, 260),
+        2,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.ACT_ONLY,
+    ),
+    AddRisk(
+        Random.nextInt(260, 450),
+        3,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.ACT_ONLY,
+    ),
+    AddRisk(
+        Random.nextInt(460, 500),
+        4,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.ACT_ONLY,
+    ),
+)
+val thirdPartyFireRiskData = listOf(
+    AddRisk(
+        Random.nextInt(
+            120, 190),
+        1,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY_FIRE_AND_THEFT,
+    ),
+    AddRisk(
+        Random.nextInt(190, 260),
+        2,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY_FIRE_AND_THEFT,
+    ),
+    AddRisk(
+        Random.nextInt(260, 450),
+        3,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY_FIRE_AND_THEFT,
+    ),
+    AddRisk(
+        Random.nextInt(460, 500),
+        4,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.THIRD_PARTY_FIRE_AND_THEFT,
+    ),
+)
+
+
+val comprehensiveRiskData = listOf(
+    AddRisk(
+        Random.nextInt(
+            120, 190),
+        1,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.COMPREHENSIVE,
+    ),
+    AddRisk(
+        Random.nextInt(190, 260),
+        2,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.COMPREHENSIVE,
+    ),
+    AddRisk(
+        Random.nextInt(260, 450),
+        3,
+
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.COMPREHENSIVE,
+    ),
+    AddRisk(
+        Random.nextInt(460, 500),
+        4,
+        RiskCategoryType.PRIVATE_CAR,
+        CoverType.COMPREHENSIVE,
+    ),
+)

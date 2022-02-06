@@ -1,5 +1,7 @@
 package models
 
+import kotlin.random.Random
+
 data class Product(
     val premiumRate: Double,
     val levy: Double,
@@ -14,49 +16,52 @@ data class Product(
     val clausesPath: String = "/Users/lucksonmwanambulo/Downloads/POL_WRD.pdf",
 )
 
+
+val range = String.format("%.1f", Random.nextDouble(1.0, 7.0)).toDouble()
+
 val products = arrayListOf(
     Product(
-        premiumRate = 5.0,
-        levy = 3.0,
-        minimumRate = 2.0,
-        maximumRate = 5.0,
+        premiumRate = range,
+        levy = range,
+        minimumRate = range,
+        maximumRate = range,
         code = "MGITP",
         policyPrefix = "MGIP",
         claimsPrefix = "MGIC",
         coverType = CoverType.THIRD_PARTY,
-        insuranceCompanyIndex = 4,
+        insuranceCompanyIndex = 5,
     ),
     Product(
-        premiumRate = 4.0,
-        levy = 1.0,
-        minimumRate = 2.0,
-        maximumRate = 3.0,
+        premiumRate = range,
+        levy = range,
+        minimumRate = range,
+        maximumRate = range,
         code = "MGIAC",
         policyPrefix = "MGIP",
         claimsPrefix = "MGIC",
         coverType = CoverType.ACT_ONLY,
-        insuranceCompanyIndex = 4,
+        insuranceCompanyIndex = 5,
     ),
     Product(
-        premiumRate = 5.0,
-        levy = 2.0,
-        minimumRate = 2.0,
-        maximumRate = 3.0,
+        premiumRate = range,
+        levy = range,
+        minimumRate = range,
+        maximumRate = range,
         code = "MGICP",
         policyPrefix = "MGIP",
         claimsPrefix = "MGIC",
         coverType = CoverType.COMPREHENSIVE,
-        insuranceCompanyIndex = 4,
+        insuranceCompanyIndex = 5,
     ),
     Product(
-        premiumRate = 5.0,
-        levy = 2.5,
-        minimumRate = 2.0,
-        maximumRate = 3.0,
+        premiumRate = range,
+        levy = range,
+        minimumRate = range,
+        maximumRate = range,
         code = "MGITPFT",
         policyPrefix = "MGIP",
         claimsPrefix = "MGIC",
         coverType = CoverType.THIRD_PARTY_FIRE_AND_THEFT,
-        insuranceCompanyIndex = 4,
+        insuranceCompanyIndex = 5,
     ),
 )

@@ -13,14 +13,14 @@ class RiskCategoryService(private val driver: WebDriver) {
     fun addRiskCategory(
         addRisk: AddRisk,
     ) {
-        driver.findElement(By.xpath("//tr[${addRisk.insuranceCompanyIndex}]/td")).click()
+
         driver.findElement(By.linkText("Risk Category")).click()
         driver.findElement(By.xpath("//a[${addRisk.riskCategoryType.riskId}]")).click()
 
         driver.findElement(By.xpath("//div[3]/div/div/div/div/div/a/i")).click()
         run {
             driver.findElement(By.id("rate_product")).click()
-            val dropdown: Select = Select(driver.findElement(By.id("rate_product")))
+            val dropdown = Select(driver.findElement(By.id("rate_product")))
             dropdown.selectByVisibleText(addRisk.coverType.coverName)
         }
         selectCoverType(addRisk)
@@ -34,30 +34,33 @@ class RiskCategoryService(private val driver: WebDriver) {
     }
 
     fun addRisks(risks: List<AddRisk>) {
+        try {
+            val first = risks.first()
+            driver.findElement(By.linkText("Risk Category")).click()
+            driver.findElement(By.xpath("//a[${first.riskCategoryType.riskId}]")).click()
+            for (risk in risks) {
+                run {
+                    driver.findElement(By.xpath("//div[3]/div/div/div/div/div/a/i")).click()
+                    driver.findElement(By.id("rate_product")).click()
+                    val dropdown = Select(driver.findElement(By.id("rate_product")))
+                    dropdown.selectByVisibleText(risk.coverType.coverName)
+                }
 
-        val first = risks.first()
-        driver.findElement(By.xpath("//tr[${first.insuranceCompanyIndex}]/td")).click()
-        driver.findElement(By.linkText("Risk Category")).click()
-        driver.findElement(By.xpath("//a[${first.riskCategoryType.riskId}]")).click()
-        for (risk in risks) {
-
-            run {
-                driver.findElement(By.xpath("//div[3]/div/div/div/div/div/a/i")).click()
-                driver.findElement(By.id("rate_product")).click()
-                val dropdown = Select(driver.findElement(By.id("rate_product")))
-                dropdown.selectByVisibleText(risk.coverType.coverName)
+                run {
+                    selectCoverType(risk)
+                    val dropdown: WebElement = driver.findElement(By.id("rate_quarter"))
+                    dropdown.findElement(By.xpath("//option[. = '${risk.quarterIndex}']")).click()
+                }
+                driver.findElement(By.id("rate_premium")).click()
+                driver.findElement(By.id("rate_premium")).sendKeys(risk.amount.toString())
+                driver.findElement(By.cssSelector("#basicRate > .btn")).click()
+                Thread.sleep(5000)
             }
-
-            run {
-                selectCoverType(risk)
-                val dropdown: WebElement = driver.findElement(By.id("rate_quarter"))
-                dropdown.findElement(By.xpath("//option[. = '${risk.quarterIndex}']")).click()
-            }
-            driver.findElement(By.id("rate_premium")).click()
-            driver.findElement(By.id("rate_premium")).sendKeys(risk.amount.toString())
-            driver.findElement(By.cssSelector("#basicRate > .btn")).click()
-
+        } catch (e: Exception) {
+            println("Risk Category Service Exception: ${e.message}")
+            driver.navigate().refresh()
             Thread.sleep(5000)
+
         }
 
     }
