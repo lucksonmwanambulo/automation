@@ -1,9 +1,11 @@
+import kotlinx.coroutines.runBlocking
 import models.products
 
 
-fun main() {
+fun main(): Unit = runBlocking{
 
     Automation().also {
-        it.start()
+        it.login()
+        it.addProductAndRisksRange(1,10,false)
     }
 }
