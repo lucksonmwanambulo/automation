@@ -7,10 +7,27 @@ import org.openqa.selenium.WebDriver
 
 class ProductService(private val driver: WebDriver) {
 
-    fun addProduct(product: Product, index: Int) {
-        driver.findElement(By.xpath("//tr[$index]/td")).click()
+    fun addProduct(product: Product) {
+        driver.findElement(By.xpath("//tr[${product.insuranceCompanyIndex}]/td")).click()
         driver.findElement(By.linkText("Products")).click()
+        createNewProduct(product)
+
+    }
+
+    fun addProducts(products: List<Product>) {
+        val first = products.first()
+        driver.findElement(By.xpath("//tr[${first.insuranceCompanyIndex}]/td")).click()
+        driver.findElement(By.linkText("Products")).click()
+        for (product in products) {
+            createNewProduct(product)
+            Thread.sleep(5000)
+        }
+
+    }
+
+    private fun createNewProduct(product: Product) {
         driver.findElement(By.xpath("//div/a/i")).click()
+
         driver.findElement(By.id("iazCode")).click()
         run {
             val dropdown = driver.findElement(By.id("iazCode"))
@@ -51,7 +68,6 @@ class ProductService(private val driver: WebDriver) {
         if (product.coverType == CoverType.COMPREHENSIVE || product.coverType == CoverType.THIRD_PARTY_FIRE_AND_THEFT) {
             addOwnDamage(driver)
         }
-
     }
 
     private fun addThirdPartyLiabilities(product: Product) {

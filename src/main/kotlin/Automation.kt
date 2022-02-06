@@ -53,7 +53,7 @@ class Automation {
 
     fun addRisks() {
         val riskCategoryService = RiskCategoryService(driver)
-        riskCategoryService.addRisks(riskData, 5, RiskCategoryType.PRIVATE_CAR)
+        riskCategoryService.addRisks(riskData)
     }
 
 

@@ -33,10 +33,12 @@ class RiskCategoryService(private val driver: WebDriver) {
         driver.findElement(By.cssSelector("#basicRate > .btn")).click()
     }
 
-    fun addRisks(risks: List<AddRisk>, insuranceCompanyIndex: Int, riskCategoryType: RiskCategoryType) {
-        driver.findElement(By.xpath("//tr[${insuranceCompanyIndex}]/td")).click()
+    fun addRisks(risks: List<AddRisk>) {
+
+        val first = risks.first()
+        driver.findElement(By.xpath("//tr[${first.insuranceCompanyIndex}]/td")).click()
         driver.findElement(By.linkText("Risk Category")).click()
-        driver.findElement(By.xpath("//a[${riskCategoryType.riskId}]")).click()
+        driver.findElement(By.xpath("//a[${first.riskCategoryType.riskId}]")).click()
         for (risk in risks) {
 
             run {
