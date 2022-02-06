@@ -29,8 +29,12 @@ class Automation {
 
 
     fun start() {
-        for (i in 2..4) {
-            login(i)
+        login()
+        for (i in 1..6) {
+            driver.findElement(By.xpath("//a[@id=\'insurance_next\']")).click()
+            Thread.sleep(5000)
+            driver.findElement(By.xpath("//tr[${i}]/td")).click()
+            companyName = driver.findElement(By.id("companyName")).text
             addProducts(products.map {
                 it.copy(
                     claimsPrefix = generateCompanyCode() + "C",
@@ -40,11 +44,25 @@ class Automation {
             })
             Thread.sleep(5000)
             addRisks(null)
-            tearDown()
+            driver.navigate().refresh()
+            Thread.sleep(5000)
+            driver.findElement(By.xpath("//li[4]/a/span")).click()
         }
     }
 
-    private fun login(companyIndex: Int) {
+    private fun findCompany(i: Int) {
+        try {
+            driver.findElement(By.xpath("//tr[${i}]/td")).click()
+        } catch (e: Exception) {
+            println(e.message)
+            driver.findElement(By.xpath("//a[@id=\'insurance_next\']")).click()
+            Thread.sleep(5000)
+            driver.findElement(By.xpath("//tr[${i}]/td")).click()
+        }
+    }
+
+    private fun login() {
+
         driver.findElement(By.id("email")).click()
         driver.findElement(By.id("email")).click()
         driver.findElement(By.id("email")).sendKeys("info@iaz.org.zm")
@@ -53,8 +71,7 @@ class Automation {
         driver.findElement(By.cssSelector(".btn")).click()
         Thread.sleep(5000)
         driver.findElement(By.xpath("//li[4]/a/span")).click()
-        driver.findElement(By.xpath("//tr[${companyIndex}]/td")).click()
-        companyName = driver.findElement(By.id("companyName")).text
+
     }
 
 
@@ -66,8 +83,8 @@ class Automation {
         productService.addProducts(products)
     }
 
-    fun addProduct(product: Product) {
-        productService.addProduct(product)
+    fun addProduct(product: Product, companyIndex: Int) {
+        productService.addProduct(product, companyIndex)
     }
 
 

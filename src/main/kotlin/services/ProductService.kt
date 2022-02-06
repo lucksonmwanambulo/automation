@@ -7,8 +7,8 @@ import org.openqa.selenium.WebDriver
 
 class ProductService(private val driver: WebDriver) {
 
-    fun addProduct(product: Product) {
-        driver.findElement(By.xpath("//tr[${product.insuranceCompanyIndex}]/td")).click()
+    fun addProduct(product: Product,companyIndex: Int) {
+        driver.findElement(By.xpath("//tr[${companyIndex}]/td")).click()
         createNewProduct(product)
 
     }
