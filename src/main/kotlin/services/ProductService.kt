@@ -14,9 +14,6 @@ class ProductService(private val driver: WebDriver) {
     }
 
     fun addProducts(products: List<Product>) {
-        val firstProduct = products.first()
-        driver.findElement(By.xpath("//tr[${firstProduct.insuranceCompanyIndex}]/td")).click()
-
         for (product in products) {
             createNewProduct(product)
             Thread.sleep(10000)
